@@ -1,9 +1,9 @@
 import React from "react";
-import * as BooksAPI from "./BooksAPI";
+import { Route, Link } from "react-router-dom";
 import "./App.css";
+import * as BooksAPI from "./BooksAPI";
 import Bookshelf from "./Bookshelf";
 import Search from "./Search";
-import { Route, Link } from "react-router-dom";
 
 class BooksApp extends React.Component {
   state = {
@@ -21,16 +21,6 @@ class BooksApp extends React.Component {
 
   // Move this book to the new shelf by updating the book.shelf field
   moveBook = (newShelf, book) => {
-    // if the book is already on a shelf then just update it's shelf
-    this.state.books.forEach((b) => {
-      if (b.id === book.id) {
-        b.shelf = newShelf;
-      } else {
-        // book is not found on any shelf yet, add the shelf then add it to current books in list
-        book.shelf = newShelf;
-      }
-    });
-
     BooksAPI.update(book, newShelf).then((response) => {
       book.shelf = newShelf;
       this.setState((prevState) => ({

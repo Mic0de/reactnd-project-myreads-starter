@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import * as BooksAPI from "./BooksAPI";
-import Book from "./Book";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import * as BooksAPI from "./BooksAPI";
+import Book from "./Book";
+
 
 class Search extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class Search extends Component {
     this.searchForABook(query);
   };
 
-  clearQUeryAndResults = () => {
+  clearQueryAndResults = () => {
     this.setState(() => ({
       query: "",
       booksFound: [],
@@ -37,18 +38,24 @@ class Search extends Component {
   searchForABook = (query) => {
     if (query.trim() !== "") {
       BooksAPI.search(query.trim()).then((booksFound) => {
-        // check if a book already on the shelf is returned in the results then update it's current shelf field
-        booksFound.forEach((bf) => {
-          this.props.booksOnAShelf.forEach((bookOnAShelf) => {
-            if (bookOnAShelf.id === bf.id) {
-              bf.shelf = bookOnAShelf.shelf;
-            }
+        // first verify that booksFound is not just an Object with an error (indicating an invalid search term)
+        if (!booksFound.error) {
+          // check if a book already on the shelf is returned in the results then update it's current shelf field
+          booksFound.forEach((bf) => {
+            this.props.booksOnAShelf.forEach((bookOnAShelf) => {
+              if (bookOnAShelf.id === bf.id) {
+                bf.shelf = bookOnAShelf.shelf;
+              }
+            });
           });
-        });
 
-        this.setState(() => ({
-          booksFound,
-        }));
+          this.setState(() => ({
+            booksFound,
+          }));
+        }else{
+          // an invalid search term was used, so clear the results to display
+          this.setState({ booksFound: [] });
+        }
       });
     } else {
       this.setState({ booksFound: [] });

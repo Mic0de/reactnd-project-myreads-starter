@@ -1,9 +1,10 @@
 import React from "react";
-import ShelfChangerMenu from "./ShelfChangerMenu";
 import RubberBand from "react-reveal/RubberBand";
 import Flip from "react-reveal/Flip";
 import Slide from "react-reveal/Slide";
 import PropTypes from "prop-types";
+import ShelfChangerMenu from "./ShelfChangerMenu";
+
 
 function Book(props) {
   const book = props.book;
